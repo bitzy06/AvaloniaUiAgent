@@ -46,7 +46,10 @@ app.MapPost("/economy-sim/change-map-view", async (EconomySimService economyServ
 
 // Graphics and UI endpoints
 app.MapGet("/economy-sim/graphics/screenshot", async (EconomySimGraphicsService graphicsService) => 
-    await graphicsService.CaptureMapScreenshotAsync());
+{
+    var imageData = await graphicsService.CaptureMapScreenshotImageAsync();
+    return Results.File(imageData, "image/png", "map-screenshot.png");
+});
 
 app.MapGet("/economy-sim/graphics/map-view-info", async (EconomySimGraphicsService graphicsService) => 
     await graphicsService.GetMapViewInfoAsync());
@@ -58,7 +61,10 @@ app.MapGet("/economy-sim/graphics/color-analysis", async (EconomySimGraphicsServ
     await graphicsService.AnalyzeMapColorsAsync());
 
 app.MapGet("/economy-sim/graphics/element-screenshot", async (EconomySimGraphicsService graphicsService, string elementName) => 
-    await graphicsService.CaptureUIElementScreenshotAsync(elementName));
+{
+    var imageData = await graphicsService.CaptureUIElementScreenshotAsync(elementName);
+    return Results.File(imageData, "image/png", $"element-{elementName}-screenshot.png");
+});
 
 // Analytics and AI endpoints
 app.MapPost("/economy-sim/analytics/start-monitoring", async (EconomySimAnalyticsService analyticsService, int intervalMs = 5000) => 
