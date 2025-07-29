@@ -7,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<FlaUIService>();
 builder.Services.AddSingleton<EconomySimService>();
 builder.Services.AddSingleton<EconomySimGraphicsService>();
+builder.Services.AddSingleton<EconomySimAnalyticsService>();
+builder.Services.AddSingleton<EconomySimAutomationService>();
 
 // Add logging
 builder.Services.AddLogging();
@@ -56,6 +58,44 @@ app.MapGet("/economy-sim/graphics/color-analysis", async (EconomySimGraphicsServ
 
 app.MapGet("/economy-sim/graphics/element-screenshot", async (EconomySimGraphicsService graphicsService, string elementName) => 
     await graphicsService.CaptureUIElementScreenshotAsync(elementName));
+
+// Analytics and AI endpoints
+app.MapPost("/economy-sim/analytics/start-monitoring", async (EconomySimAnalyticsService analyticsService, int intervalMs = 5000) => 
+    await analyticsService.StartMonitoringAsync(intervalMs));
+
+app.MapGet("/economy-sim/analytics/comprehensive", async (EconomySimAnalyticsService analyticsService) => 
+    await analyticsService.GetGameAnalyticsAsync());
+
+app.MapGet("/economy-sim/analytics/performance-metrics", (EconomySimAnalyticsService analyticsService) => 
+    analyticsService.GetPerformanceMetrics());
+
+app.MapGet("/economy-sim/analytics/game-events", async (EconomySimAnalyticsService analyticsService) => 
+    await analyticsService.DetectGameEventsAsync());
+
+app.MapGet("/economy-sim/analytics/ai-recommendations", async (EconomySimAnalyticsService analyticsService) => 
+    await analyticsService.GetAIRecommendationsAsync());
+
+// Automation and Macro endpoints
+app.MapPost("/economy-sim/automation/register-script", (EconomySimAutomationService automationService, AutomationScriptDto script) => 
+    automationService.RegisterScript(script));
+
+app.MapPost("/economy-sim/automation/execute-script", async (EconomySimAutomationService automationService, string scriptName) => 
+    await automationService.ExecuteScriptAsync(scriptName));
+
+app.MapPost("/economy-sim/automation/start-engine", async (EconomySimAutomationService automationService) => 
+    await automationService.StartAutomationEngineAsync());
+
+app.MapPost("/economy-sim/automation/stop-engine", (EconomySimAutomationService automationService) => 
+    automationService.StopAutomationEngine());
+
+app.MapGet("/economy-sim/automation/scripts", (EconomySimAutomationService automationService) => 
+    automationService.GetAllScripts());
+
+app.MapPost("/economy-sim/automation/execute-macro", async (EconomySimAutomationService automationService, MacroSequenceDto macro) => 
+    await automationService.ExecuteMacroAsync(macro));
+
+app.MapPost("/economy-sim/automation/create-ai-script", async (EconomySimAutomationService automationService, string objective) => 
+    await automationService.CreateAIAutomationScriptAsync(objective));
 
 app.Run();
 app.Urls.Add("http://localhost:5000");

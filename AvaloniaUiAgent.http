@@ -102,3 +102,102 @@ GET {{AvaloniaUiAgent_HostAddress}}/economy-sim/graphics/color-analysis
 ###
 ### Capture screenshot of specific UI element
 GET {{AvaloniaUiAgent_HostAddress}}/economy-sim/graphics/element-screenshot?elementName=TreasuryText
+
+### Analytics and AI endpoints
+
+### Start monitoring game state changes
+POST {{AvaloniaUiAgent_HostAddress}}/economy-sim/analytics/start-monitoring?intervalMs=5000
+
+###
+### Get comprehensive game analytics
+GET {{AvaloniaUiAgent_HostAddress}}/economy-sim/analytics/comprehensive
+
+###
+### Get performance metrics over time
+GET {{AvaloniaUiAgent_HostAddress}}/economy-sim/analytics/performance-metrics
+
+###
+### Detect recent game events
+GET {{AvaloniaUiAgent_HostAddress}}/economy-sim/analytics/game-events
+
+###
+### Get AI-powered recommendations
+GET {{AvaloniaUiAgent_HostAddress}}/economy-sim/analytics/ai-recommendations
+
+### Automation and Macro endpoints
+
+### Register a new automation script
+POST {{AvaloniaUiAgent_HostAddress}}/economy-sim/automation/register-script
+Content-Type: application/json
+
+{
+  "name": "AutoTrade",
+  "description": "Automatically create export deals when treasury is high",
+  "isEnabled": true,
+  "triggers": [
+    {
+      "type": "Treasury",
+      "operator": "GreaterThan",
+      "value": "2000000"
+    }
+  ],
+  "actions": [
+    {
+      "type": "ExecuteCommand",
+      "parameters": {
+        "commandType": "trade",
+        "action": "create_export",
+        "item": "Steel"
+      },
+      "delayMs": 1000
+    }
+  ]
+}
+
+###
+### Execute a specific automation script
+POST {{AvaloniaUiAgent_HostAddress}}/economy-sim/automation/execute-script?scriptName=AutoTrade
+
+###
+### Start the automation engine
+POST {{AvaloniaUiAgent_HostAddress}}/economy-sim/automation/start-engine
+
+###
+### Stop the automation engine
+POST {{AvaloniaUiAgent_HostAddress}}/economy-sim/automation/stop-engine
+
+###
+### Get all registered scripts
+GET {{AvaloniaUiAgent_HostAddress}}/economy-sim/automation/scripts
+
+###
+### Execute a macro sequence
+POST {{AvaloniaUiAgent_HostAddress}}/economy-sim/automation/execute-macro
+Content-Type: application/json
+
+{
+  "name": "InfrastructureBuild",
+  "description": "Build multiple infrastructure projects in sequence",
+  "delayBetweenCommandsMs": 2000,
+  "commands": [
+    {
+      "commandType": "construction",
+      "action": "build_factory",
+      "parameters": {}
+    },
+    {
+      "commandType": "construction",
+      "action": "build_road",
+      "parameters": {}
+    },
+    {
+      "commandType": "construction",
+      "action": "build_port",
+      "parameters": {}
+    }
+  ]
+}
+
+###
+### Create AI-powered automation script
+POST {{AvaloniaUiAgent_HostAddress}}/economy-sim/automation/create-ai-script?objective=improve_economy
