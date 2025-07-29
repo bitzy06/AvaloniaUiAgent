@@ -1,6 +1,206 @@
-@AvaloniaUiAgent_HostAddress = http://localhost:5167
+@AvaloniaUiAgent_HostAddress = http://localhost:5000
 
-GET {{AvaloniaUiAgent_HostAddress}}/weatherforecast/
-Accept: application/json
+### Avalonia Headless endpoints (formerly FlaUI)
+GET {{AvaloniaUiAgent_HostAddress}}/
 
 ###
+POST {{AvaloniaUiAgent_HostAddress}}/initialize
+
+###
+POST {{AvaloniaUiAgent_HostAddress}}/click?buttonName=StartButton
+
+###
+GET {{AvaloniaUiAgent_HostAddress}}/readLabel?labelName=StatusLabel
+
+###
+GET {{AvaloniaUiAgent_HostAddress}}/window-content
+
+### Economy Sim Integration endpoints
+
+### Initialize the economy-sim service
+POST {{AvaloniaUiAgent_HostAddress}}/economy-sim/initialize
+
+###
+### Get current game state (treasury, population, date, etc.)
+GET {{AvaloniaUiAgent_HostAddress}}/economy-sim/game-state
+
+###
+### Get diplomatic relations
+GET {{AvaloniaUiAgent_HostAddress}}/economy-sim/diplomatic-relations
+
+###
+### Get trade data (imports/exports)
+GET {{AvaloniaUiAgent_HostAddress}}/economy-sim/trade-data
+
+###
+### Get construction projects
+GET {{AvaloniaUiAgent_HostAddress}}/economy-sim/construction-projects
+
+###
+### Execute a diplomacy command
+POST {{AvaloniaUiAgent_HostAddress}}/economy-sim/execute-command
+Content-Type: application/json
+
+{
+  "commandType": "diplomacy",
+  "action": "propose_treaty",
+  "parameters": {
+    "targetCountry": "United Kingdom"
+  }
+}
+
+###
+### Execute a trade command
+POST {{AvaloniaUiAgent_HostAddress}}/economy-sim/execute-command
+Content-Type: application/json
+
+{
+  "commandType": "trade",
+  "action": "create_export",
+  "parameters": {
+    "item": "Steel",
+    "quantity": "1000",
+    "partner": "France"
+  }
+}
+
+###
+### Execute a construction command
+POST {{AvaloniaUiAgent_HostAddress}}/economy-sim/execute-command
+Content-Type: application/json
+
+{
+  "commandType": "construction",
+  "action": "build_factory",
+  "parameters": {
+    "factoryType": "Steel Mill",
+    "location": "Detroit"
+  }
+}
+
+###
+### Change map view
+POST {{AvaloniaUiAgent_HostAddress}}/economy-sim/change-map-view?viewType=political
+
+###
+POST {{AvaloniaUiAgent_HostAddress}}/economy-sim/change-map-view?viewType=terrain
+
+### Graphics and UI endpoints
+
+### Capture map screenshot
+GET {{AvaloniaUiAgent_HostAddress}}/economy-sim/graphics/screenshot
+
+###
+### Get map view information
+GET {{AvaloniaUiAgent_HostAddress}}/economy-sim/graphics/map-view-info
+
+###
+### Get UI overlay information
+GET {{AvaloniaUiAgent_HostAddress}}/economy-sim/graphics/ui-overlay-info
+
+###
+### Get color analysis of map
+GET {{AvaloniaUiAgent_HostAddress}}/economy-sim/graphics/color-analysis
+
+###
+### Capture screenshot of specific UI element
+GET {{AvaloniaUiAgent_HostAddress}}/economy-sim/graphics/element-screenshot?elementName=TreasuryText
+
+### Analytics and AI endpoints
+
+### Start monitoring game state changes
+POST {{AvaloniaUiAgent_HostAddress}}/economy-sim/analytics/start-monitoring?intervalMs=5000
+
+###
+### Get comprehensive game analytics
+GET {{AvaloniaUiAgent_HostAddress}}/economy-sim/analytics/comprehensive
+
+###
+### Get performance metrics over time
+GET {{AvaloniaUiAgent_HostAddress}}/economy-sim/analytics/performance-metrics
+
+###
+### Detect recent game events
+GET {{AvaloniaUiAgent_HostAddress}}/economy-sim/analytics/game-events
+
+###
+### Get AI-powered recommendations
+GET {{AvaloniaUiAgent_HostAddress}}/economy-sim/analytics/ai-recommendations
+
+### Automation and Macro endpoints
+
+### Register a new automation script
+POST {{AvaloniaUiAgent_HostAddress}}/economy-sim/automation/register-script
+Content-Type: application/json
+
+{
+  "name": "AutoTrade",
+  "description": "Automatically create export deals when treasury is high",
+  "isEnabled": true,
+  "triggers": [
+    {
+      "type": "Treasury",
+      "operator": "GreaterThan",
+      "value": "2000000"
+    }
+  ],
+  "actions": [
+    {
+      "type": "ExecuteCommand",
+      "parameters": {
+        "commandType": "trade",
+        "action": "create_export",
+        "item": "Steel"
+      },
+      "delayMs": 1000
+    }
+  ]
+}
+
+###
+### Execute a specific automation script
+POST {{AvaloniaUiAgent_HostAddress}}/economy-sim/automation/execute-script?scriptName=AutoTrade
+
+###
+### Start the automation engine
+POST {{AvaloniaUiAgent_HostAddress}}/economy-sim/automation/start-engine
+
+###
+### Stop the automation engine
+POST {{AvaloniaUiAgent_HostAddress}}/economy-sim/automation/stop-engine
+
+###
+### Get all registered scripts
+GET {{AvaloniaUiAgent_HostAddress}}/economy-sim/automation/scripts
+
+###
+### Execute a macro sequence
+POST {{AvaloniaUiAgent_HostAddress}}/economy-sim/automation/execute-macro
+Content-Type: application/json
+
+{
+  "name": "InfrastructureBuild",
+  "description": "Build multiple infrastructure projects in sequence",
+  "delayBetweenCommandsMs": 2000,
+  "commands": [
+    {
+      "commandType": "construction",
+      "action": "build_factory",
+      "parameters": {}
+    },
+    {
+      "commandType": "construction",
+      "action": "build_road",
+      "parameters": {}
+    },
+    {
+      "commandType": "construction",
+      "action": "build_port",
+      "parameters": {}
+    }
+  ]
+}
+
+###
+### Create AI-powered automation script
+POST {{AvaloniaUiAgent_HostAddress}}/economy-sim/automation/create-ai-script?objective=improve_economy
