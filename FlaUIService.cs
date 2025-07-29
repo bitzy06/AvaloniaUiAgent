@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 public class FlaUIService : IDisposable
 {
-    private Application _app;
+    private FlaUI.Core.Application _app;
     private UIA3Automation _automation;
     private Window _mainWindow;
     private bool _isLaunched = false;
@@ -33,7 +33,7 @@ public class FlaUIService : IDisposable
 
             _logger.LogInformation("Launching Avalonia app from: {ExecutablePath}", executablePath);
             
-            _app = Application.Launch(executablePath);
+            _app = FlaUI.Core.Application.Launch(executablePath);
             _automation = new UIA3Automation();
             _mainWindow = _app.GetMainWindow(_automation);
 
