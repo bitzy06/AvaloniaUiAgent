@@ -37,7 +37,7 @@ public class EconomySimAutomationService
                 Name = script.Name,
                 Description = script.Description,
                 Triggers = script.Triggers ?? Array.Empty<TriggerConditionDto>(),
-                Actions = script.Actions ?? Array.Empty<AutomationActionDto>(),
+                Actions = script.Actions?.ToArray() ?? Array.Empty<AutomationActionDto>(),
                 IsEnabled = script.IsEnabled,
                 CreatedAt = DateTime.UtcNow
             };
@@ -95,11 +95,11 @@ public class EconomySimAutomationService
     /// <summary>
     /// Start the automation engine that monitors triggers and executes scripts
     /// </summary>
-    public async Task<string> StartAutomationEngineAsync()
+    public Task<string> StartAutomationEngineAsync()
     {
         if (_isRunningAutomation)
         {
-            return "❌ Automation engine is already running";
+            return Task.FromResult("❌ Automation engine is already running");
         }
 
         _isRunningAutomation = true;
@@ -122,7 +122,7 @@ public class EconomySimAutomationService
             }
         });
 
-        return "✅ Automation engine started";
+        return Task.FromResult("✅ Automation engine started");
     }
 
     /// <summary>
@@ -222,7 +222,7 @@ public class EconomySimAutomationService
                     Value = "1000000"
                 }
             },
-            Actions = new[]
+            Actions = new List<AutomationActionDto>
             {
                 new AutomationActionDto
                 {
@@ -252,7 +252,7 @@ public class EconomySimAutomationService
                     Value = "0"
                 }
             },
-            Actions = new[]
+            Actions = new List<AutomationActionDto>
             {
                 new AutomationActionDto
                 {
@@ -283,7 +283,7 @@ public class EconomySimAutomationService
         }
     }
 
-    private async Task<bool> CheckScriptTriggersAsync(AutomationScript script, GameStateDto gameState, GameAnalyticsDto analytics)
+    private Task<bool> CheckScriptTriggersAsync(AutomationScript script, GameStateDto gameState, GameAnalyticsDto analytics)
     {
         foreach (var trigger in script.Triggers)
         {
@@ -299,11 +299,11 @@ public class EconomySimAutomationService
 
             if (!isTriggered)
             {
-                return false; // All triggers must be satisfied
+                return Task.FromResult(false); // All triggers must be satisfied
             }
         }
 
-        return script.Triggers.Length > 0; // Return true only if there were triggers to check
+        return Task.FromResult(script.Triggers.Length > 0); // Return true only if there were triggers to check
     }
 
     private bool CheckNumericTrigger(string value, TriggerConditionDto trigger)
@@ -332,8 +332,8 @@ public class EconomySimAutomationService
                 {
                     var command = new GameCommandDto
                     {
-                        CommandType = action.Parameters["commandType"].ToString(),
-                        Action = action.Parameters["action"].ToString(),
+                        CommandType = action.Parameters["commandType"]?.ToString() ?? "",
+                        Action = action.Parameters["action"]?.ToString() ?? "",
                         Parameters = action.Parameters.Where(p => p.Key != "commandType" && p.Key != "action")
                                                     .ToDictionary(p => p.Key, p => p.Value)
                     };
@@ -343,7 +343,7 @@ public class EconomySimAutomationService
             case "changemapview":
                 if (action.Parameters.ContainsKey("viewType"))
                 {
-                    await _economyService.ChangeMapViewAsync(action.Parameters["viewType"].ToString());
+                    await _economyService.ChangeMapViewAsync(action.Parameters["viewType"]?.ToString() ?? "");
                 }
                 break;
         }
@@ -375,7 +375,7 @@ public class EconomySimAutomationService
         return script;
     }
 
-    private AutomationActionDto MapRecommendationToAction(string suggestedAction)
+    private AutomationActionDto? MapRecommendationToAction(string suggestedAction)
     {
         return suggestedAction.ToLower() switch
         {

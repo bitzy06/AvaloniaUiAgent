@@ -3,6 +3,7 @@
     <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UseWindowsDesktop>true</UseWindowsDesktop>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="FlaUI.Core" Version="4.0.0" />

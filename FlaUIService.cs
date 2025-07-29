@@ -8,9 +8,9 @@ using Microsoft.Extensions.Logging;
 
 public class FlaUIService : IDisposable
 {
-    private FlaUI.Core.Application _app;
-    private UIA3Automation _automation;
-    private Window _mainWindow;
+    private FlaUI.Core.Application? _app;
+    private UIA3Automation? _automation;
+    private Window? _mainWindow;
     private bool _isLaunched = false;
     private readonly IConfiguration _configuration;
     private readonly ILogger<FlaUIService> _logger;

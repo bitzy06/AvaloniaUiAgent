@@ -22,7 +22,7 @@ public class EconomySimService : IDisposable
     /// <summary>
     /// Initialize connection to economy-sim application
     /// </summary>
-    public async Task<string> InitializeAsync()
+    public Task<string> InitializeAsync()
     {
         try
         {
@@ -30,17 +30,17 @@ public class EconomySimService : IDisposable
             var launchResult = _flaUIService.LaunchApp();
             if (launchResult.Contains("❌") || launchResult.Contains("🔥"))
             {
-                return launchResult;
+                return Task.FromResult(launchResult);
             }
 
             _isConnected = true;
             _logger.LogInformation("Economy-sim service initialized successfully");
-            return "✅ Economy-sim service connected";
+            return Task.FromResult("✅ Economy-sim service connected");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to initialize economy-sim service");
-            return $"🔥 Error initializing economy-sim service: {ex.Message}";
+            return Task.FromResult($"🔥 Error initializing economy-sim service: {ex.Message}");
         }
     }
 

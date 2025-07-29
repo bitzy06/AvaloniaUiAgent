@@ -118,13 +118,13 @@ public class EconomySimAnalyticsService
     /// <summary>
     /// Detect significant events or changes in the game state
     /// </summary>
-    public async Task<List<GameEventDto>> DetectGameEventsAsync()
+    public Task<List<GameEventDto>> DetectGameEventsAsync()
     {
         var events = new List<GameEventDto>();
 
         if (_gameStateHistory.Count < 2)
         {
-            return events;
+            return Task.FromResult(events);
         }
 
         var current = _gameStateHistory.Last();
@@ -159,7 +159,7 @@ public class EconomySimAnalyticsService
             });
         }
 
-        return events;
+        return Task.FromResult(events);
     }
 
     /// <summary>

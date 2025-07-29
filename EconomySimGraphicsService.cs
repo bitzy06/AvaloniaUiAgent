@@ -89,13 +89,13 @@ public class EconomySimGraphicsService
     /// <summary>
     /// Capture screenshot of specific UI elements
     /// </summary>
-    public async Task<byte[]> CaptureUIElementScreenshotAsync(string elementName)
+    public Task<byte[]> CaptureUIElementScreenshotAsync(string elementName)
     {
         try
         {
             // This would use FlaUI to capture a specific UI element
             // For now, return empty byte array as placeholder
-            return Array.Empty<byte>();
+            return Task.FromResult(Array.Empty<byte>());
         }
         catch (Exception ex)
         {
@@ -107,18 +107,19 @@ public class EconomySimGraphicsService
     /// <summary>
     /// Get color analysis of map regions
     /// </summary>
-    public async Task<MapColorAnalysisDto> AnalyzeMapColorsAsync()
+    public Task<MapColorAnalysisDto> AnalyzeMapColorsAsync()
     {
         try
         {
             // This would analyze the current map screenshot to extract color information
             // useful for understanding country borders, terrain types, etc.
-            return new MapColorAnalysisDto
+            var result = new MapColorAnalysisDto
             {
                 DominantColors = new[] { "#008000", "#0000FF", "#FFFF00" }, // Green, Blue, Yellow
                 ColorRegions = Array.Empty<ColorRegionDto>(),
                 AnalysisTime = DateTime.UtcNow
             };
+            return Task.FromResult(result);
         }
         catch (Exception ex)
         {
