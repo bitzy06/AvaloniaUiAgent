@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services
-builder.Services.AddSingleton<FlaUIService>();
+builder.Services.AddSingleton<AvaloniaHeadlessService>();
 builder.Services.AddSingleton<EconomySimService>();
 builder.Services.AddSingleton<EconomySimGraphicsService>();
 builder.Services.AddSingleton<EconomySimAnalyticsService>();
@@ -15,11 +15,12 @@ builder.Services.AddLogging();
 
 var app = builder.Build();
 
-// Original FlaUI endpoints
-app.MapGet("/", () => "FlaUI Agent is running!");
-app.MapPost("/launch", (FlaUIService flaUI) => flaUI.LaunchApp());
-app.MapPost("/click", (FlaUIService flaUI, string buttonText) => flaUI.ClickButton(buttonText));
-app.MapGet("/readLabel", (FlaUIService flaUI, string labelAutomationId) => flaUI.ReadLabelText(labelAutomationId));
+// Avalonia Headless endpoints (renamed from FlaUI)
+app.MapGet("/", () => "Avalonia Headless Economy Sim Agent is running!");
+app.MapPost("/initialize", (AvaloniaHeadlessService avaloniaService) => avaloniaService.InitializeApp());
+app.MapPost("/click", (AvaloniaHeadlessService avaloniaService, string buttonName) => avaloniaService.ClickButton(buttonName));
+app.MapGet("/readLabel", (AvaloniaHeadlessService avaloniaService, string labelName) => avaloniaService.ReadLabelText(labelName));
+app.MapGet("/window-content", (AvaloniaHeadlessService avaloniaService) => avaloniaService.GetWindowContent());
 
 // Economy Sim Integration endpoints
 app.MapPost("/economy-sim/initialize", async (EconomySimService economyService) => 
@@ -97,5 +98,5 @@ app.MapPost("/economy-sim/automation/execute-macro", async (EconomySimAutomation
 app.MapPost("/economy-sim/automation/create-ai-script", async (EconomySimAutomationService automationService, string objective) => 
     await automationService.CreateAIAutomationScriptAsync(objective));
 
-app.Run();
 app.Urls.Add("http://localhost:5000");
+app.Run();

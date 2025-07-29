@@ -7,12 +7,12 @@ using System.Drawing;
 public class EconomySimGraphicsService
 {
     private readonly ILogger<EconomySimGraphicsService> _logger;
-    private readonly FlaUIService _flaUIService;
+    private readonly AvaloniaHeadlessService _avaloniaService;
 
-    public EconomySimGraphicsService(ILogger<EconomySimGraphicsService> logger, FlaUIService flaUIService)
+    public EconomySimGraphicsService(ILogger<EconomySimGraphicsService> logger, AvaloniaHeadlessService avaloniaService)
     {
         _logger = logger;
-        _flaUIService = flaUIService;
+        _avaloniaService = avaloniaService;
     }
 
     /// <summary>
@@ -22,7 +22,7 @@ public class EconomySimGraphicsService
     {
         try
         {
-            // Use FlaUI to capture screenshot of the map area
+            // Use Avalonia Headless to capture screenshot of the map area
             var screenshot = await CaptureScreenshotInternalAsync();
             
             return new MapScreenshotDto
@@ -93,7 +93,7 @@ public class EconomySimGraphicsService
     {
         try
         {
-            // This would use FlaUI to capture a specific UI element
+            // This would use Avalonia Headless to capture a specific UI element
             // For now, return empty byte array as placeholder
             return Task.FromResult(Array.Empty<byte>());
         }
@@ -131,7 +131,7 @@ public class EconomySimGraphicsService
     // Private helper methods
     private async Task<byte[]> CaptureScreenshotInternalAsync()
     {
-        // This would interface with FlaUI or direct screen capture
+        // This would interface with Avalonia Headless rendering system
         // For now, return empty array as placeholder
         await Task.Delay(100);
         return Array.Empty<byte>();

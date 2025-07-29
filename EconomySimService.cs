@@ -9,14 +9,14 @@ public class EconomySimService : IDisposable
 {
     private readonly ILogger<EconomySimService> _logger;
     private readonly IConfiguration _configuration;
-    private readonly FlaUIService _flaUIService;
+    private readonly AvaloniaHeadlessService _avaloniaService;
     private bool _isConnected = false;
 
-    public EconomySimService(ILogger<EconomySimService> logger, IConfiguration configuration, FlaUIService flaUIService)
+    public EconomySimService(ILogger<EconomySimService> logger, IConfiguration configuration, AvaloniaHeadlessService avaloniaService)
     {
         _logger = logger;
         _configuration = configuration;
-        _flaUIService = flaUIService;
+        _avaloniaService = avaloniaService;
     }
 
     /// <summary>
@@ -26,11 +26,11 @@ public class EconomySimService : IDisposable
     {
         try
         {
-            // First ensure the economy-sim app is launched via FlaUI
-            var launchResult = _flaUIService.LaunchApp();
-            if (launchResult.Contains("❌") || launchResult.Contains("🔥"))
+            // Initialize the Avalonia Headless app
+            var initResult = _avaloniaService.InitializeApp();
+            if (initResult.Contains("❌") || initResult.Contains("🔥"))
             {
-                return Task.FromResult(launchResult);
+                return Task.FromResult(initResult);
             }
 
             _isConnected = true;
@@ -91,7 +91,7 @@ public class EconomySimService : IDisposable
         try
         {
             // Open diplomacy menu
-            await _flaUIService.ClickButton("Diplomacy");
+            await _avaloniaService.ClickButton("Diplomacy");
             await Task.Delay(500); // Wait for UI to update
 
             // Read relations from the diplomacy list
@@ -99,7 +99,7 @@ public class EconomySimService : IDisposable
             var relations = new List<DiplomaticRelationDto>();
 
             // Close diplomacy menu
-            await _flaUIService.ClickButton("✕");
+            await _avaloniaService.ClickButton("✕");
 
             return relations;
         }
@@ -123,7 +123,7 @@ public class EconomySimService : IDisposable
         try
         {
             // Open trade menu
-            await _flaUIService.ClickButton("Trade");
+            await _avaloniaService.ClickButton("Trade");
             await Task.Delay(500);
 
             var tradeData = new TradeDataDto
@@ -134,7 +134,7 @@ public class EconomySimService : IDisposable
             };
 
             // Close trade menu
-            await _flaUIService.ClickButton("✕");
+            await _avaloniaService.ClickButton("✕");
 
             return tradeData;
         }
@@ -157,12 +157,12 @@ public class EconomySimService : IDisposable
 
         try
         {
-            await _flaUIService.ClickButton("Construction");
+            await _avaloniaService.ClickButton("Construction");
             await Task.Delay(500);
 
             var projects = new List<ConstructionProjectDto>();
 
-            await _flaUIService.ClickButton("✕");
+            await _avaloniaService.ClickButton("✕");
             return projects;
         }
         catch (Exception ex)
@@ -224,7 +224,7 @@ public class EconomySimService : IDisposable
                 _ => viewType
             };
 
-            var result = await _flaUIService.ClickButton(buttonName);
+            var result = await _avaloniaService.ClickButton(buttonName);
             return $"✅ Map view changed to {viewType}";
         }
         catch (Exception ex)
@@ -237,82 +237,82 @@ public class EconomySimService : IDisposable
     // Private helper methods
     private async Task<string> ReadUIValueAsync(string automationId)
     {
-        var result = await _flaUIService.ReadLabelText(automationId);
+        var result = await _avaloniaService.ReadLabelText(automationId);
         return result.Contains("not found") ? "N/A" : result;
     }
 
     private async Task<string> ExecuteDiplomacyCommand(GameCommandDto command)
     {
-        await _flaUIService.ClickButton("Diplomacy");
+        await _avaloniaService.ClickButton("Diplomacy");
         await Task.Delay(500);
 
         switch (command.Action?.ToLower())
         {
             case "propose_treaty":
-                await _flaUIService.ClickButton("Propose Treaty");
+                await _avaloniaService.ClickButton("Propose Treaty");
                 break;
             case "declare_war":
-                await _flaUIService.ClickButton("Declare War");
+                await _avaloniaService.ClickButton("Declare War");
                 break;
             case "send_diplomat":
-                await _flaUIService.ClickButton("Send Diplomat");
+                await _avaloniaService.ClickButton("Send Diplomat");
                 break;
         }
 
-        await _flaUIService.ClickButton("✕");
+        await _avaloniaService.ClickButton("✕");
         return $"✅ Executed diplomacy command: {command.Action}";
     }
 
     private async Task<string> ExecuteTradeCommand(GameCommandDto command)
     {
-        await _flaUIService.ClickButton("Trade");
+        await _avaloniaService.ClickButton("Trade");
         await Task.Delay(500);
 
         switch (command.Action?.ToLower())
         {
             case "create_export":
-                await _flaUIService.ClickButton("Create Export Deal");
+                await _avaloniaService.ClickButton("Create Export Deal");
                 break;
             case "create_import":
-                await _flaUIService.ClickButton("Create Import Deal");
+                await _avaloniaService.ClickButton("Create Import Deal");
                 break;
         }
 
-        await _flaUIService.ClickButton("✕");
+        await _avaloniaService.ClickButton("✕");
         return $"✅ Executed trade command: {command.Action}";
     }
 
     private async Task<string> ExecuteConstructionCommand(GameCommandDto command)
     {
-        await _flaUIService.ClickButton("Construction");
+        await _avaloniaService.ClickButton("Construction");
         await Task.Delay(500);
 
         switch (command.Action?.ToLower())
         {
             case "build_factory":
-                await _flaUIService.ClickButton("Build Factory");
+                await _avaloniaService.ClickButton("Build Factory");
                 break;
             case "build_road":
-                await _flaUIService.ClickButton("Build Road");
+                await _avaloniaService.ClickButton("Build Road");
                 break;
             case "build_bridge":
-                await _flaUIService.ClickButton("Build Bridge");
+                await _avaloniaService.ClickButton("Build Bridge");
                 break;
             case "build_port":
-                await _flaUIService.ClickButton("Build Port");
+                await _avaloniaService.ClickButton("Build Port");
                 break;
             case "build_airport":
-                await _flaUIService.ClickButton("Build Airport");
+                await _avaloniaService.ClickButton("Build Airport");
                 break;
         }
 
-        await _flaUIService.ClickButton("✕");
+        await _avaloniaService.ClickButton("✕");
         return $"✅ Executed construction command: {command.Action}";
     }
 
     private async Task<string> ExecutePolicyCommand(GameCommandDto command)
     {
-        await _flaUIService.ClickButton("Set Policy");
+        await _avaloniaService.ClickButton("Set Policy");
         await Task.Delay(500);
         // Policy implementation would depend on the specific UI
         return $"✅ Executed policy command: {command.Action}";

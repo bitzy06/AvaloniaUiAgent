@@ -1,16 +1,19 @@
 @AvaloniaUiAgent_HostAddress = http://localhost:5000
 
-### Original FlaUI endpoints
+### Avalonia Headless endpoints (formerly FlaUI)
 GET {{AvaloniaUiAgent_HostAddress}}/
 
 ###
-POST {{AvaloniaUiAgent_HostAddress}}/launch
+POST {{AvaloniaUiAgent_HostAddress}}/initialize
 
 ###
-POST {{AvaloniaUiAgent_HostAddress}}/click?buttonText=New Game
+POST {{AvaloniaUiAgent_HostAddress}}/click?buttonName=StartButton
 
 ###
-GET {{AvaloniaUiAgent_HostAddress}}/readLabel?labelAutomationId=TreasuryText
+GET {{AvaloniaUiAgent_HostAddress}}/readLabel?labelName=StatusLabel
+
+###
+GET {{AvaloniaUiAgent_HostAddress}}/window-content
 
 ### Economy Sim Integration endpoints
 
